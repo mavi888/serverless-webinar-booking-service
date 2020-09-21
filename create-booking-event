@@ -1,0 +1,18 @@
+{
+  "booking": {
+    "propertyId": "123456",
+    "userId": "12345567",
+    "startBookingDate": "20200716",
+    "endBookingDate": "20200720"
+  }
+}
+
+{
+    "booking": {
+        "endBookingDate": "20200720",
+        "propertyId": "123456",
+        "startBookingDate": "20200716",
+        "id": "6c7746e4-b9b5-4f73-aa50-2f5cff93b6d5",
+        "userId": "12345567"
+    }
+}

@@ -1,7 +1,7 @@
 {
-  "name": "create-order",
+  "name": "process-order",
   "version": "1.0.0",
-  "description": "Create order",
+  "description": "Process order",
   "main": "app.js",
   "repository": "",
   "author": "Danilo Poccia",
@@ -11,8 +11,6 @@
     "aws-sdk": "^2.613.0",
     "aws-xray-sdk": "^2.5.0"
   },
-  "scripts": {
-  },
-  "devDependencies": {
-  }
+  "scripts": {},
+  "devDependencies": {}
 }

@@ -1,9 +1,9 @@
-AWSTemplateFormatVersion: '2010-09-09'
+AWSTemplateFormatVersion: "2010-09-09"
 Transform: AWS::Serverless-2016-10-31
 Description: >
 
-  Serverless Observability Sample App
-  
+  Booking service example app for showing serverless observability
+
 Globals:
   Function:
     Timeout: 3
@@ -12,73 +12,71 @@ Globals:
     TracingEnabled: True
 
 Resources:
-
-  OrdersTable:
+  BookingTable:
     Type: AWS::Serverless::SimpleTable
 
-  OrdersQueue:
+  BookingQueue:
     Type: AWS::SQS::Queue
 
-  ReadOrderFunction:
+  ReadBookingFunction:
     Type: AWS::Serverless::Function
     Properties:
-      CodeUri: read-order/
+      CodeUri: read-booking/
       Handler: app.lambdaHandler
       Runtime: nodejs12.x
       Policies:
         - DynamoDBReadPolicy:
-            TableName: !Ref OrdersTable
-      Environment: 
+            TableName: !Ref BookingTable
+      Environment:
         Variables:
-          ORDERS_TABLE: !Ref OrdersTable
+          BOOKINGS_TABLE: !Ref BookingTable
       Events:
-        GetOrder:
+        GetBooking:
           Type: Api
           Properties:
-            Path: /order/{id}
+            Path: /booking/{id}
             Method: GET
 
-  CreateOrderFunction:
+  CreateBookingFunction:
     Type: AWS::Serverless::Function
     Properties:
-      CodeUri: create-order/
+      CodeUri: create-booking/
       Handler: app.lambdaHandler
       Runtime: nodejs12.x
       Policies:
         - SQSSendMessagePolicy:
-            QueueName:
-              !GetAtt OrdersQueue.QueueName
-      Environment: 
+            QueueName: !GetAtt BookingQueue.QueueName
+      Environment:
         Variables:
-          ORDERS_QUEUE_URL: !Ref OrdersQueue
+          BOOKINGS_QUEUE_URL: !Ref BookingQueue
       Events:
-        GetOrder:
+        CreateBooking:
           Type: Api
           Properties:
-            Path: /order
+            Path: /booking
             Method: POST
 
   ProcessOrderFunction:
     Type: AWS::Serverless::Function
     Properties:
-      CodeUri: process-order/
+      CodeUri: process-booking/
       Handler: app.lambdaHandler
       Runtime: nodejs12.x
       Timeout: 30
       Policies:
         - DynamoDBCrudPolicy:
-            TableName: !Ref OrdersTable
-      Environment: 
+            TableName: !Ref BookingTable
+      Environment:
         Variables:
-          ORDERS_TABLE: !Ref OrdersTable
+          BOOKINGS_TABLE: !Ref BookingTable
       Events:
         MySQSEvent:
           Type: SQS
           Properties:
-            Queue: !GetAtt OrdersQueue.Arn
+            Queue: !GetAtt BookingQueue.Arn
             BatchSize: 10
-    
+
 Outputs:
-  HelloWorldApi:
+  BookingApi:
     Description: "Endpoint URL for Prod stage for GET/POST functions"
-    Value: !Sub "https://${ServerlessRestApi}.execute-api.${AWS::Region}.amazonaws.com/Prod/order/"
+    Value: !Sub "https://${ServerlessRestApi}.execute-api.${AWS::Region}.amazonaws.com/Prod/"
